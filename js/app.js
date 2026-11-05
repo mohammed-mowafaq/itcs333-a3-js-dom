@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  document.addEventListener('DOMContentLoaded', function () {
+  function init() {
     var list = document.getElementById('todo-list');
     var errorMsg = document.getElementById('error-msg');
     var counter = document.getElementById('counter');
@@ -111,5 +111,11 @@
       }
       counter.textContent = left + ' item(s) left';
     }
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();
