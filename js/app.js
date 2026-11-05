@@ -2,6 +2,8 @@
   'use strict';
 
   function init() {
+    var form = document.getElementById('todo-form');
+    var input = document.getElementById('todo-input');
     var list = document.getElementById('todo-list');
     var errorMsg = document.getElementById('error-msg');
     var counter = document.getElementById('counter');
@@ -9,42 +11,21 @@
     var filterActive = document.getElementById('filter-active');
     var filterDone = document.getElementById('filter-done');
 
-    var input =
-      document.querySelector('#todo-input, #new-todo, #todo-text, #new-item, input[type="text"], input:not([type])') ||
-      document.getElementsByTagName('input')[0];
-
-    var addBtn = document.querySelector('#add-btn, #add-button, #add-todo, #add-item, #add, #addBtn');
-    if (!addBtn) {
-      var allButtons = document.getElementsByTagName('button');
-      for (var b = 0; b < allButtons.length; b++) {
-        var btn = allButtons[b];
-        if (btn.id.indexOf('filter') !== 0 && !list.contains(btn)) {
-          addBtn = btn;
-          break;
-        }
-      }
-    }
-
     var currentFilter = 'all';
 
-    // ---- كل المستمعات هنا (مستمع واحد على القائمة) ----
+    // ---- المستمعات (مستمع واحد على القائمة) ----
+    form.addEventListener('submit', onSubmit);
     list.addEventListener('click', onListClick);
-    if (addBtn) addBtn.addEventListener('click', onAdd);
-    input.addEventListener('keydown', onKey);
-    if (filterAll) filterAll.addEventListener('click', function () { setFilter('all'); });
-    if (filterActive) filterActive.addEventListener('click', function () { setFilter('active'); });
-    if (filterDone) filterDone.addEventListener('click', function () { setFilter('done'); });
+    filterAll.addEventListener('click', function () { setFilter('all'); });
+    filterActive.addEventListener('click', function () { setFilter('active'); });
+    filterDone.addEventListener('click', function () { setFilter('done'); });
 
     showError(false);
     refresh();
 
     // ---- الدوال ----
-    function onKey(e) {
-      if (e.key === 'Enter') onAdd(e);
-    }
-
-    function onAdd(e) {
-      if (e && e.preventDefault) e.preventDefault();
+    function onSubmit(e) {
+      e.preventDefault();
       var text = input.value.trim();
       if (text === '') {
         showError(true);
@@ -90,7 +71,7 @@
     }
 
     function showError(show) {
-      if (!errorMsg) return;
+      errorMsg.classList.toggle('hidden', !show);
       errorMsg.hidden = !show;
       errorMsg.style.display = show ? '' : 'none';
     }
@@ -113,9 +94,9 @@
     }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
+  if (document.getElementById('todo-list')) {
     init();
+  } else {
+    document.addEventListener('DOMContentLoaded', init);
   }
 })();
